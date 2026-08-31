@@ -16,3 +16,7 @@ m | 3 | Backlog |
 | 3 | Backlog |
 | US-07 | As an author, I want basic analytics... | Low | 5 |
 Backlog |
+| US-08 | As an author, I want to edit my previously published posts, so that I can correct mistakes or update information. |
+High | 3 | Backlog | This builds on the post-creation capability and requires only standard database update operations and form repopulation, making it moderately complex.
+| US-09 | As a reader, I want to search for posts using specific tags, so that I can easily find content matching my interests. | Medium |
+| 5 | Backlog | Implementing a tag-based search requires updating the database schema to relate tags to posts and building a new query interface, representing a slightly higher relative effort.

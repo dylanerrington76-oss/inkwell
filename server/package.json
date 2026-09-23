@@ -5,11 +5,14 @@
   "description": "Inkwell API server",
   "type": "module",
   "scripts": {
-    "dev": "node --watch src/index.js"
+    "dev": "node --watch --env-file=.env src/index.js"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
-    "jsonwebtoken": "^9.0.3"
+    "jsonwebtoken": "^9.0.3",
+    "prisma": "^7.10.0"
   }
 }

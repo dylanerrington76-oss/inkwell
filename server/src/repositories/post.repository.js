@@ -24,7 +24,7 @@ export const PostRepository = {
       OR: [
         { title: { contains: query, mode: "insensitive" } },
         { body: { contains: query, mode: "insensitive" } },
-      ]
+      ],
     };
     const rows = await prisma.post.findMany({
       where,

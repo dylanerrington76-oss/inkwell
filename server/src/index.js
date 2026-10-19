@@ -19,6 +19,17 @@ app.use("/api", healthRoutes);
 app.use("/api", authRoutes);
 app.use("/api", postRoutes);
 
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).json({
+    error: { code: err.code || "INTERNAL_ERROR", message: err.message },
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Inkwell API listening on port ${PORT}`);
+});
+
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     status: "ok",
@@ -30,18 +41,4 @@ app.get("/api/version", (req, res) => {
   res.status(200).json({
     version: "0.1.0"
   });
-});
-
-app.listen(PORT, () => {
-  console.log(`Inkwell API listening on port ${PORT}`);
-});
-
-app.use((err, req, res, next) => {
-console.error(err);
-res.status(err.status || 500).json({
-error: { code: err.code || "INTERNAL_ERROR", message: err.message },
-});
-});
-app.listen(PORT, () => {
-  console.log(`Inkwell API listening on port ${PORT}`);
 });

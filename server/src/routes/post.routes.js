@@ -3,6 +3,7 @@ import { PostService } from "../services/post.service.js";
 import { requireAuth } from "../middleware/auth.middleware.js";
 
 const router = Router();
+const MAX_PAGE_SIZE = 100;
 
 // server/src/routes/post.routes.js — AFTER (hardened)
 router.post("/posts", requireAuth, async (req, res, next) => {
@@ -26,6 +27,42 @@ router.get("/posts", async (req, res, next) => {
       ? await PostService.search({ query: search, page: Number(page) })
       : await PostService.listPublished({ page: Number(page) });
     res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
+const pageSize = requestedPageSize;
+
+const requestedPageSize = Number(req.query.pageSize ?? 10);
+
+if (
+  !Number.isInteger(requestedPageSize) ||
+  requestedPageSize < 1 ||
+  requestedPageSize > MAX_PAGE_SIZE
+) {
+  return res.status(400).json({
+    error: {
+      code: "INVALID_PAGE_SIZE",
+      message: "pageSize must be between 1 and 100.",
+    },
+  });
+}
+
+// server/src/routes/post.routes.js — AFTER (fixed)
+router.delete("/posts/:id", requireAuth, async (req, res, next) => {
+  try {
+    const post = await PostService.getById(req.params.id);
+    if (!post) return res.status(404).json({ error: { code: "NOT_FOUND" } });
+
+    // A01's fix, in one line: check that the logged-in user actually
+    // owns this resource before allowing the action on it.
+    if (post.authorId !== req.user.id) {
+      return res.status(403).json({ error: { code: "FORBIDDEN" } });
+    }
+
+    await PostService.delete(req.params.id);
+    res.status(204).end();
   } catch (err) {
     next(err);
   }

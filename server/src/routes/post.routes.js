@@ -3,7 +3,6 @@ import { PostService } from "../services/post.service.js";
 import { requireAuth } from "../middleware/auth.middleware.js";
 
 const router = Router();
-const MAX_PAGE_SIZE = 100;
 
 // server/src/routes/post.routes.js — AFTER (hardened)
 router.post("/posts", requireAuth, async (req, res, next) => {
@@ -31,23 +30,6 @@ router.get("/posts", async (req, res, next) => {
     next(err);
   }
 });
-
-const pageSize = requestedPageSize;
-
-const requestedPageSize = Number(req.query.pageSize ?? 10);
-
-if (
-  !Number.isInteger(requestedPageSize) ||
-  requestedPageSize < 1 ||
-  requestedPageSize > MAX_PAGE_SIZE
-) {
-  return res.status(400).json({
-    error: {
-      code: "INVALID_PAGE_SIZE",
-      message: "pageSize must be between 1 and 100.",
-    },
-  });
-}
 
 // server/src/routes/post.routes.js — AFTER (fixed)
 router.delete("/posts/:id", requireAuth, async (req, res, next) => {
